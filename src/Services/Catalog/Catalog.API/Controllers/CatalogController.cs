@@ -7,7 +7,7 @@ namespace Catalog.API.Controllers
 {
     [ApiController]
     [Route("api/v1/[controller]")]
-    public class CatalogController:ControllerBase
+    public class CatalogController : ControllerBase
     {
         private readonly IProductRepository _productRepository;
         private readonly ILogger<CatalogController> _logger;
@@ -21,23 +21,23 @@ namespace Catalog.API.Controllers
         [HttpGet]
         [ProducesResponseType(typeof(IEnumerable<Product>), (int)HttpStatusCode.OK)]
 
-        public async Task<ActionResult< IEnumerable<Product>>> GetProducts()
+        public async Task<ActionResult<IEnumerable<Product>>> GetProducts()
         {
             var products = await _productRepository.GetProducts();
             return Ok(products);
         }
 
-        [HttpGet("{id:length(24)}", Name = "GetProduct" )]
-        [ProducesResponseType( (int)HttpStatusCode.NotFound)]
+        [HttpGet("{id:length(24)}", Name = "GetProduct")]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [ProducesResponseType(typeof(Product), (int)HttpStatusCode.OK)]
         public async Task<ActionResult<Product>> GetProductById(string id)
         {
             var product = await _productRepository.GetProduct(id);
 
-            if (product == null )
+            if (product == null)
             {
                 _logger.LogError($"Product with id: {id}, not found.");
-                return NotFound(); 
+                return NotFound();
             }
             return Ok(product);
         }
@@ -50,15 +50,15 @@ namespace Catalog.API.Controllers
         {
             var products = await _productRepository.GetProductByCategory(category);
 
-            return Ok(products);    
+            return Ok(products);
         }
 
         [HttpPost]
-        [ProducesResponseType(typeof(Product), (int)HttpStatusCode.OK )]
+        [ProducesResponseType(typeof(Product), (int)HttpStatusCode.OK)]
         public async Task<ActionResult<Product>> CreateProduct([FromBody] Product product)
         {
             await _productRepository.CreateProduct(product);
-            return CreatedAtRoute("GetProduct", new {id= product.Id}, product );
+            return CreatedAtRoute("GetProduct", new { id = product.Id }, product);
         }
 
         [HttpDelete("{id:length(24)}", Name = "DeleteProduct")]
